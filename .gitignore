@@ -25,3 +25,5 @@ dist-ssr
 
 # external api schemas
 search-response-schema.json
+
+.env*

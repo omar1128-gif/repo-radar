@@ -1,19 +1,16 @@
-import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
 
 import type { GitHubRepo } from '@/types/github';
-
-dayjs.extend(relativeTime);
-
-const compactNumber = new Intl.NumberFormat('en', { notation: 'compact' });
+import { formatCompactNumber, formatNumber } from '@/utils/format-number';
 
 export function SearchResultItem({ repo }: { repo: GitHubRepo }) {
   return (
@@ -29,7 +26,8 @@ export function SearchResultItem({ repo }: { repo: GitHubRepo }) {
         variant="rounded"
         sx={{ width: 40, height: 40 }}
       />
-      <Stack spacing={0.5} sx={{ minWidth: 0, flex: 1 }}>
+
+      <Stack spacing={1} sx={{ minWidth: 0, flex: 1 }}>
         <Link
           href={repo.html_url}
           target="_blank"
@@ -40,6 +38,7 @@ export function SearchResultItem({ repo }: { repo: GitHubRepo }) {
         >
           {repo.full_name}
         </Link>
+
         {repo.description && (
           <Typography
             variant="body2"
@@ -61,36 +60,54 @@ export function SearchResultItem({ repo }: { repo: GitHubRepo }) {
           sx={{ color: 'text.secondary', alignItems: 'center' }}
           divider={<Divider orientation="vertical" flexItem />}
         >
-          <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
-            <StarBorderIcon sx={{ fontSize: 16 }} />
-            <Typography
-              variant="caption"
-              title={repo.stargazers_count.toLocaleString()}
+          <Tooltip title={`${formatNumber(repo.stargazers_count)} stars`}>
+            <Stack
+              direction="row"
+              spacing={0.5}
+              sx={{ alignItems: 'center', cursor: 'pointer' }}
             >
-              {compactNumber.format(repo.stargazers_count)}
-            </Typography>
-          </Stack>
+              <StarBorderIcon sx={{ fontSize: 16 }} />
+              <Typography variant="caption">
+                {formatCompactNumber(repo.stargazers_count)}
+              </Typography>
+            </Stack>
+          </Tooltip>
 
           {repo.language && (
             <Typography variant="caption">{repo.language}</Typography>
           )}
 
           {repo.open_issues_count > 0 && (
-            <Typography
-              variant="caption"
-              title={`${repo.open_issues_count.toLocaleString()} open issues`}
+            <Tooltip
+              title={`${formatNumber(repo.open_issues_count)} open issues`}
             >
-              {compactNumber.format(repo.open_issues_count)} issues
-            </Typography>
+              <Typography variant="caption" sx={{ cursor: 'pointer' }}>
+                {formatCompactNumber(repo.open_issues_count)} issues
+              </Typography>
+            </Tooltip>
           )}
 
-          <Typography variant="caption">
-            Updated {dayjs(repo.updated_at).fromNow()}
-          </Typography>
+          <Tooltip
+            title={`Last commit: ${dayjs(repo.pushed_at).format('MMM D, YYYY · HH:mm')}`}
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                cursor: 'pointer',
+              }}
+            >
+              Pushed {dayjs(repo.pushed_at).fromNow()}
+            </Typography>
+          </Tooltip>
         </Stack>
       </Stack>
+
       <Stack>
-        <Button variant="outlined" size="small" startIcon={<BookmarkIcon />}>
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<BookmarkBorderIcon />}
+        >
           Track
         </Button>
       </Stack>

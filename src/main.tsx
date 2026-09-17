@@ -1,10 +1,14 @@
 import './index.css';
 
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { App } from './app/app';
 import { AppProvider } from './app/provider';
+
+dayjs.extend(relativeTime);
 
 const container = document.getElementById('root');
 
