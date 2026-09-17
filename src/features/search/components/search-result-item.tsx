@@ -1,4 +1,4 @@
-import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -90,11 +90,7 @@ export function SearchResultItem({ repo }: { repo: GitHubRepo }) {
         </Stack>
       </Stack>
       <Stack>
-        <Button
-          variant="outlined"
-          size="small"
-          startIcon={<LocationSearchingIcon />}
-        >
+        <Button variant="outlined" size="small" startIcon={<BookmarkIcon />}>
           Track
         </Button>
       </Stack>

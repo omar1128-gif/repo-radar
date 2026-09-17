@@ -59,7 +59,7 @@ export function App() {
           role="tabpanel"
           id="panel-tracked"
           aria-labelledby="tab-tracked"
-          hidden={view !== 'tracked'}
+          hidden={view !== VIEWS.TRACKED}
         >
           <TrackedReposPanel onBrowse={() => setView(VIEWS.SEARCH)} />
         </Box>

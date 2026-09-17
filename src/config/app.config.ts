@@ -5,7 +5,6 @@ export const APP_CONFIG = {
   },
   search: {
     pageSize: 10,
-    maxPageSize: 100,
     maxSearchResults: 1000, // Github API limitation
     minQueryLength: 2,
     debounceMs: 400,
