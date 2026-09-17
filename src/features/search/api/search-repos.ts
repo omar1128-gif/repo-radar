@@ -1,5 +1,5 @@
 import { githubApi } from '@/api/github-api';
-import type { GitHubRepo, GitHubSearchResponse } from '@/types/github';
+import type { GitHubRepo, GitHubSearchResponse } from '@/types';
 
 import type { SearchQueryParams } from '../types';
 

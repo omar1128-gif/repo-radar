@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
@@ -8,6 +9,7 @@ import { useState } from 'react';
 
 import { APP_CONFIG } from '@/config/app.config';
 import { useDebounce } from '@/hooks';
+import type { GitHubRepo } from '@/types';
 import { getTotalPages } from '@/utils/pagination';
 
 import { useSearchReposQuery } from '../api/search-repos';
@@ -15,7 +17,12 @@ import { SearchInput } from './search-input';
 import { SearchResults } from './search-results';
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
-export function SearchPanel() {
+
+interface SearchPanelProps {
+  renderRepoActions: (repo: GitHubRepo) => React.ReactNode;
+}
+
+export function SearchPanel({ renderRepoActions }: SearchPanelProps) {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState<number>(APP_CONFIG.search.pageSize);
@@ -62,9 +69,10 @@ export function SearchPanel() {
         isFetching={isFetching}
         data={data}
         error={error}
-        onRetry={refetch}
         page={page}
         pageSize={pageSize}
+        onRetry={refetch}
+        renderRepoActions={renderRepoActions}
       />
 
       {totalPages > 1 && (
@@ -78,16 +86,7 @@ export function SearchPanel() {
             px: 1,
           }}
         >
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{
-              display: { xs: 'none', sm: 'block', width: 120 },
-              visibility: 'hidden',
-            }}
-          >
-            --
-          </Typography>
+          <Box sx={{ minWidth: 120 }} />
 
           <Pagination
             count={totalPages}

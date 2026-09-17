@@ -1,7 +1,5 @@
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
@@ -9,10 +7,18 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
 
-import type { GitHubRepo } from '@/types/github';
+import type { GitHubRepo } from '@/types';
 import { formatCompactNumber, formatNumber } from '@/utils/format-number';
 
-export function SearchResultItem({ repo }: { repo: GitHubRepo }) {
+interface SearchResultItemProps {
+  repo: GitHubRepo;
+  renderRepoActions: (repo: GitHubRepo) => React.ReactNode;
+}
+
+export function SearchResultItem({
+  repo,
+  renderRepoActions,
+}: SearchResultItemProps) {
   return (
     <Stack
       component="li"
@@ -102,15 +108,7 @@ export function SearchResultItem({ repo }: { repo: GitHubRepo }) {
         </Stack>
       </Stack>
 
-      <Stack>
-        <Button
-          variant="outlined"
-          size="small"
-          startIcon={<BookmarkBorderIcon />}
-        >
-          Track
-        </Button>
-      </Stack>
+      {renderRepoActions(repo)}
     </Stack>
   );
 }

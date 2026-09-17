@@ -1,4 +1,4 @@
-export function loadStateFromLocalStorage<T>(key: string): T | undefined {
+export function loadStateFromLocalStorage(key: string): unknown {
   try {
     const serialized = localStorage.getItem(key);
     if (!serialized) return undefined;
@@ -9,9 +9,9 @@ export function loadStateFromLocalStorage<T>(key: string): T | undefined {
   }
 }
 
-export function saveStateToLocalStorage<T>(key: string, state: T) {
+export function saveStateToLocalStorage(key: string, value: unknown): void {
   try {
-    const serialized = JSON.stringify(state);
+    const serialized = JSON.stringify(value);
     localStorage.setItem(key, serialized);
   } catch (e) {
     console.error('Failed to save state to localStorage', e);

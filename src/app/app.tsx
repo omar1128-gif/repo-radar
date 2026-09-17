@@ -4,9 +4,12 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { useState } from 'react';
 
+import { useAppSelector } from '@/app/hooks';
 import { AppHeader } from '@/components/app-header';
 import { SearchPanel } from '@/features/search/components/search-panel';
+import { TrackRepoButton } from '@/features/tracked-repos/components/track-repo-button';
 import { TrackedReposPanel } from '@/features/tracked-repos/components/tracked-repos-panel';
+import { selectTrackedRepoIds } from '@/features/tracked-repos/stores';
 
 const VIEWS = {
   SEARCH: 'search',
@@ -17,6 +20,7 @@ type View = (typeof VIEWS)[keyof typeof VIEWS];
 
 export function App() {
   const [view, setView] = useState<View>(VIEWS.SEARCH);
+  const trackedReposCount = useAppSelector(selectTrackedRepoIds).length;
 
   const handleViewChange = (_: React.SyntheticEvent, newView: View) => {
     setView(newView);
@@ -40,7 +44,7 @@ export function App() {
             aria-controls="panel-search"
           />
           <Tab
-            label="Tracked"
+            label={`Tracked (${trackedReposCount})`}
             value={VIEWS.TRACKED}
             id="tab-tracked"
             aria-controls="panel-tracked"
@@ -53,7 +57,9 @@ export function App() {
           aria-labelledby="tab-search"
           hidden={view !== VIEWS.SEARCH}
         >
-          <SearchPanel />
+          <SearchPanel
+            renderRepoActions={(repo) => <TrackRepoButton repo={repo} />}
+          />
         </Box>
         <Box
           role="tabpanel"

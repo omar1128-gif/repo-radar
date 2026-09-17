@@ -14,7 +14,7 @@ import { Fragment } from 'react';
 import { getErrorMessage } from '@/api/get-error-message';
 import { EmptyState } from '@/components/empty-state';
 import { APP_CONFIG } from '@/config/app.config';
-import type { GitHubRepo, GitHubSearchResponse } from '@/types/github';
+import type { GitHubRepo, GitHubSearchResponse } from '@/types';
 
 import { SearchResultItem } from './search-result-item';
 
@@ -26,6 +26,7 @@ interface SearchResultsProps {
   page: number;
   pageSize: number;
   onRetry: () => void;
+  renderRepoActions: (repo: GitHubRepo) => React.ReactNode;
 }
 
 export function SearchResults({
@@ -36,6 +37,7 @@ export function SearchResults({
   page,
   pageSize,
   onRetry,
+  renderRepoActions,
 }: SearchResultsProps) {
   if (isIdle) {
     return (
@@ -96,7 +98,10 @@ export function SearchResults({
         {data.items.map((repo, index) => (
           <Fragment key={repo.id}>
             {index > 0 && <Divider component="li" aria-hidden />}
-            <SearchResultItem repo={repo} />
+            <SearchResultItem
+              repo={repo}
+              renderRepoActions={renderRepoActions}
+            />
           </Fragment>
         ))}
       </Paper>
