@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 import { AppHeader } from '@/components/app-header';
 import { SearchPanel } from '@/features/search/components/search-panel';
+import { TrackedReposPanel } from '@/features/tracked-repos/components/tracked-repos-panel';
 
 const VIEWS = {
   SEARCH: 'search',
@@ -59,7 +60,9 @@ export function App() {
           id="panel-tracked"
           aria-labelledby="tab-tracked"
           hidden={view !== 'tracked'}
-        ></Box>
+        >
+          <TrackedReposPanel onBrowse={() => setView(VIEWS.SEARCH)} />
+        </Box>
       </Container>
     </>
   );

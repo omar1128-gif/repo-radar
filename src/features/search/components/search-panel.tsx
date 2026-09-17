@@ -1,32 +1,24 @@
 import { Pagination } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { useAppDispatch, useAppSelector } from '@/app/hooks.ts';
 import { APP_CONFIG } from '@/config/app.config';
 import { useDebounce } from '@/hooks';
 import { getTotalPages } from '@/utils/pagination';
 
 import { useSearchReposQuery } from '../api/search-repos';
-import { resetPagination, selectSearchState, setPage } from '../stores';
 import { SearchInput } from './search-input';
 import { SearchResults } from './search-results';
 
 export function SearchPanel() {
-  const dispatch = useAppDispatch();
-  const { page, pageSize } = useAppSelector(selectSearchState);
-
   const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState<number>(APP_CONFIG.search.pageSize);
+
   const debouncedQuery = useDebounce(
     query.trim(),
     APP_CONFIG.search.debounceMs
   );
-
-  useEffect(() => {
-    if (debouncedQuery.length >= APP_CONFIG.search.minQueryLength) {
-      dispatch(resetPagination());
-    }
-  }, [debouncedQuery, dispatch]);
 
   const isIdle = debouncedQuery.length < APP_CONFIG.search.minQueryLength;
 
@@ -35,8 +27,13 @@ export function SearchPanel() {
     { skip: isIdle }
   );
 
+  function handleQueryChange(value: string) {
+    setQuery(value);
+    setPage(1);
+  }
+
   function handlePageChange(_: React.ChangeEvent<unknown>, newPage: number) {
-    dispatch(setPage(newPage));
+    setPage(newPage);
   }
 
   const totalPages = isIdle
@@ -45,7 +42,11 @@ export function SearchPanel() {
 
   return (
     <Stack spacing={2} sx={{ justifyContent: 'center' }}>
-      <SearchInput value={query} onChange={setQuery} isSearching={isFetching} />
+      <SearchInput
+        value={query}
+        onChange={handleQueryChange}
+        isSearching={isFetching}
+      />
       <SearchResults
         isIdle={isIdle}
         isFetching={isFetching}
