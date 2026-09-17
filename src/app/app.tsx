@@ -5,6 +5,7 @@ import Tabs from '@mui/material/Tabs';
 import { useState } from 'react';
 
 import { AppHeader } from '@/components/app-header';
+import { SearchPanel } from '@/features/search/components/search-panel';
 
 const VIEWS = {
   SEARCH: 'search',
@@ -50,7 +51,9 @@ export function App() {
           id="panel-search"
           aria-labelledby="tab-search"
           hidden={view !== VIEWS.SEARCH}
-        ></Box>
+        >
+          <SearchPanel />
+        </Box>
         <Box
           role="tabpanel"
           id="panel-tracked"
