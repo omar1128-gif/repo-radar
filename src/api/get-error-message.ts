@@ -1,7 +1,7 @@
 import type { SerializedError } from '@reduxjs/toolkit';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
-import type { GitHubErrorBody } from '@/types/github';
+import type { GitHubErrorBody } from '@/types';
 
 function isGitHubErrorBody(data: unknown): data is GitHubErrorBody {
   return (
