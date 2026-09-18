@@ -1,12 +1,14 @@
+import BugReportIcon from '@mui/icons-material/BugReport';
+import PublishIcon from '@mui/icons-material/Publish';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
 
+import { RepoStat } from '@/components/repo-stat';
 import type { GitHubRepo } from '@/types';
 import { formatCompactNumber, formatNumber } from '@/utils/format-number';
 
@@ -50,9 +52,6 @@ export function SearchResultItem({
             variant="body2"
             color="text.secondary"
             sx={{
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
             }}
           >
@@ -61,50 +60,41 @@ export function SearchResultItem({
         )}
 
         <Stack
-          direction="row"
-          spacing={2}
-          sx={{ color: 'text.secondary', alignItems: 'center' }}
+          direction={{
+            xs: 'column',
+            sm: 'row',
+          }}
+          spacing={{ xs: 0.1, sm: 2 }}
+          sx={{
+            color: 'text.secondary',
+            alignItems: {
+              xs: 'start',
+              sm: 'center',
+            },
+          }}
           divider={<Divider orientation="vertical" flexItem />}
         >
-          <Tooltip title={`${formatNumber(repo.stargazers_count)} stars`}>
-            <Stack
-              direction="row"
-              spacing={0.5}
-              sx={{ alignItems: 'center', cursor: 'pointer' }}
-            >
-              <StarBorderIcon sx={{ fontSize: 16 }} />
-              <Typography variant="caption">
-                {formatCompactNumber(repo.stargazers_count)}
-              </Typography>
-            </Stack>
-          </Tooltip>
+          <RepoStat
+            icon={<StarBorderIcon />}
+            value={formatCompactNumber(repo.stargazers_count)}
+            tooltip={`${formatNumber(repo.stargazers_count)} stars`}
+          />
+
+          <RepoStat
+            icon={<BugReportIcon />}
+            value={formatCompactNumber(repo.open_issues_count)}
+            tooltip={`${formatNumber(repo.open_issues_count)} open issues and pull requests`}
+          />
 
           {repo.language && (
             <Typography variant="caption">{repo.language}</Typography>
           )}
 
-          {repo.open_issues_count > 0 && (
-            <Tooltip
-              title={`${formatNumber(repo.open_issues_count)} open issues`}
-            >
-              <Typography variant="caption" sx={{ cursor: 'pointer' }}>
-                {formatCompactNumber(repo.open_issues_count)} issues
-              </Typography>
-            </Tooltip>
-          )}
-
-          <Tooltip
-            title={`Last commit: ${dayjs(repo.pushed_at).format('MMM D, YYYY · HH:mm')}`}
-          >
-            <Typography
-              variant="caption"
-              sx={{
-                cursor: 'pointer',
-              }}
-            >
-              Pushed {dayjs(repo.pushed_at).fromNow()}
-            </Typography>
-          </Tooltip>
+          <RepoStat
+            icon={<PublishIcon />}
+            value={`Pushed ${dayjs(repo.pushed_at).fromNow()}`}
+            tooltip={`Last push to any branch: ${dayjs(repo.pushed_at).format('MMM D, YYYY · HH:mm')}`}
+          />
         </Stack>
       </Stack>
 

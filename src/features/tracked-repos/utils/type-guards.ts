@@ -1,8 +1,8 @@
 import { isObject } from '@/utils/type-guards';
 
-import type { TrackedRepoItem } from '../types';
+import type { TrackedRepo } from '../types';
 
-export function isTrackedRepoItem(item: unknown): item is TrackedRepoItem {
+export function isTrackedRepo(item: unknown): item is TrackedRepo {
   return (
     isObject(item) &&
     typeof item.id === 'number' &&

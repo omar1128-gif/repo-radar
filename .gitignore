@@ -23,7 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# external api schemas
-search-response-schema.json
+# external api response examples
+github_res_example*.json
 
 .env*

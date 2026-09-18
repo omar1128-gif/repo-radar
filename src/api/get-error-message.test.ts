@@ -14,9 +14,9 @@ describe('getErrorMessage', () => {
   });
 
   it('reports the rate limit on 429', () => {
-    expect(getErrorMessage({ status: 429, data: { message: 'Too many' } })).toBe(
-      'GitHub rate limit reached. Wait a minute and try again.'
-    );
+    expect(
+      getErrorMessage({ status: 429, data: { message: 'Too many' } })
+    ).toBe('GitHub rate limit reached. Wait a minute and try again.');
   });
 
   it('reports the rate limit on a 403 that mentions it', () => {

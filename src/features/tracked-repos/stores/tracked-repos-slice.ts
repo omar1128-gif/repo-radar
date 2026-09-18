@@ -2,11 +2,11 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 import type { GitHubRepo } from '@/types';
 
-import type { TrackedRepoItem, TrackedReposState } from '../types';
+import type { TrackedRepo, TrackedReposState } from '../types';
 import { loadTrackedRepos } from '../utils';
 
-function buildInitialState(items: TrackedRepoItem[]): TrackedReposState {
-  const repos: Record<number, TrackedRepoItem> = {};
+function buildInitialState(items: TrackedRepo[]): TrackedReposState {
+  const repos: Record<number, TrackedRepo> = {};
   const ids: number[] = [];
 
   for (const item of items) {

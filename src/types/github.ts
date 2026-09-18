@@ -27,3 +27,19 @@ export interface GitHubErrorBody {
   message: string;
   documentation_url?: string;
 }
+
+export interface GitHubUserSignature {
+  name: string;
+  email: string;
+  date: string;
+}
+
+export interface GitHubCommit {
+  sha: string;
+  html_url: string;
+  commit: {
+    message: string;
+    author: GitHubUserSignature | null;
+    committer: GitHubUserSignature | null;
+  };
+}

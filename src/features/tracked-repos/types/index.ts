@@ -1,13 +1,12 @@
-import type { GitHubRepo } from '@/types';
+import type { GitHubCommit, GitHubRepo } from '@/types';
 
-export type TrackedRepoItem = Pick<GitHubRepo, 'id' | 'full_name'>;
+export type TrackedRepo = Pick<GitHubRepo, 'id' | 'full_name'>;
 
-export interface TrackedReposState {
-  repos: Record<number, TrackedRepoItem>;
-  ids: number[];
+export interface RepoStats extends GitHubRepo {
+  lastCommit: GitHubCommit | null;
 }
 
-export interface GetRepoQueryParams {
-  owner: string;
-  repo: string;
+export interface TrackedReposState {
+  repos: Record<number, TrackedRepo>;
+  ids: number[];
 }
