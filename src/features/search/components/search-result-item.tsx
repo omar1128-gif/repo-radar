@@ -47,7 +47,7 @@ export function SearchResultItem({
           {repo.full_name}
         </Link>
 
-        {repo.description && (
+        {repo.description ? (
           <Typography
             variant="body2"
             color="text.secondary"
@@ -56,6 +56,10 @@ export function SearchResultItem({
             }}
           >
             {repo.description}
+          </Typography>
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            No available description
           </Typography>
         )}
 

@@ -12,6 +12,7 @@ import { EmptyState } from '@/components/empty-state';
 
 import { trackedReposApi } from '../api/get-repo-stats';
 import { selectTrackedReposList } from '../stores';
+import { StarsChart } from './stars-chart';
 import { TrackedRepoItem } from './tracked-repo-item';
 
 interface TrackedReposPanelProps {
@@ -62,6 +63,8 @@ export function TrackedReposPanel({ onBrowse }: TrackedReposPanelProps) {
           Refresh all
         </Button>
       </Stack>
+
+      <StarsChart />
 
       <Paper component="ul" sx={{ m: 0, p: 0, listStyle: 'none' }}>
         {trackedRepos.map((trackedRepo, index) => (

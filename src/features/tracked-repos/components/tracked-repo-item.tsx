@@ -94,7 +94,7 @@ export function TrackedRepoItem({ trackedRepo }: TrackedRepoItemProps) {
 
         {isLoading && <Skeleton width="60%" />}
 
-        {data?.description && (
+        {data?.description ? (
           <Typography
             variant="body2"
             color="text.secondary"
@@ -103,6 +103,10 @@ export function TrackedRepoItem({ trackedRepo }: TrackedRepoItemProps) {
             }}
           >
             {data.description}
+          </Typography>
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            No available description
           </Typography>
         )}
 
