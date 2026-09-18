@@ -1,73 +1,68 @@
-# React + TypeScript + Vite
+# Repo Radar
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Search GitHub repositories, track the ones you care about, and watch their stats.
 
-Currently, two official plugins are available:
+## The task
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Build a dashboard that lets users search GitHub repositories, track their favorites, and monitor their latest stats.
 
-## React Compiler
+Required: React 19 + TypeScript, Redux Toolkit or Zustand, MUI, the GitHub REST API, deployed on Vercel.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+- Debounced repository search, with pagination and a page size selector
+- Track and untrack from the search results, with the count on the Tracked tab
+- Tracked view with stars, open issues, last commit and last push per repo
+- Refresh one repo or all of them
+- Separate loading and error states for every repo
+- Tracked repos saved in localStorage, validated when read back
+- Bar chart of stars per tracked repo
+- Light and dark theme
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Running it
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Other scripts: `npm test`, `npm run lint`, `npm run build`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+You can add a GitHub token in `.env` to get a higher rate limit while developing. The app works without one.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```
+VITE_GITHUB_TOKEN=your_token
+```
+
+## Decisions
+
+- **bullet-proof-react folder structure.** Each feature keeps its own api, components, store and types. Only shared things go in `src/components` and `src/utils`.
+- **Features don't import each other.** Search results render their Track button through a `renderRepoActions` prop, and `app.tsx` passes it in.
+- **Redux Toolkit instead of Zustand.** I've used RTK before, and RTK Query comes with it, so caching, invalidation and loading states are handled. With Zustand I would have added TanStack Query next to it, since Zustand only covers client state. Redux DevTools also helps a lot while debugging.
+- **User choices go in a slice, server data goes in RTK Query.** The slice keeps which repos are tracked, because that's a user choice that must survive a reload. Stars, issues and commits come from the cache, because they belong to the server and go stale right away. Search text, page and the active tab stay in component state.
+- **One query per repo.** `getRepoStats` runs the repo request and the latest commit request together in one `queryFn`. Each repo gets its own cache entry, so each card has its own loading state, error and `refetch` without extra bookkeeping.
+- **Refresh all is one line.** `invalidateTags(['RepoStats'])`, and every card reloads on its own.
+- **The chart reads the cache.** It takes stars from the same entries the cards already fetched, so it makes no requests of its own and updates when a card refreshes.
+- **No redux-persist.** I've used it before on React 18, but it hasn't been maintained for years and people have reported problems with React 19, so I didn't want to depend on it here. Instead the slice loads from localStorage in a lazy `initialState`, and listener middleware saves on track and untrack. A type guard checks what comes back, so bad or old data gives an empty list instead of a crash, and the key is versioned so the format can change later.
+
+## Limitations
+
+- **Rate limit.** Without a token GitHub allows 60 requests an hour and 10 searches a minute per IP. Each tracked repo costs 2 requests, so refreshing 10 repos costs 20. I used a token locally but did not set it on Vercel, because Vite puts `VITE_*` variables into the bundle and the token would be public. Rate limit errors get their own message, and a failed refresh keeps the numbers already on screen.
+- **Search is capped.** GitHub returns at most 1000 search results and at most 100 per page, no matter how large the total is. The page count is based on what you can actually reach.
+- **Open issues include pull requests.** `open_issues_count` counts both, same as GitHub's own UI. Splitting them would need another search request per repo, on a stricter quota.
+- **Pushed and committed are different dates.** `pushed_at` is the last push to any branch. The commit date is the latest commit on the default branch. A branch push or a force push moves one and not the other, so both are shown.
+- **Search results lag a little.** They come from GitHub's search index, so stars can differ slightly from the tracked view until you refresh.
+
+## Tests
+
+Vitest and Testing Library, on the parts where a mistake would be silent:
+
+- the tracked repos reducer
+- reading and writing localStorage, including invalid JSON, wrong shapes and storage that throws
+- API error messages
+- the pagination helper
+- two repo cards rendered together where one request fails, checking the other is unaffected
+
+```bash
+npm test
 ```
