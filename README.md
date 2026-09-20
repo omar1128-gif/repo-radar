@@ -19,6 +19,18 @@ Required: React 19 + TypeScript, Redux Toolkit or Zustand, MUI, the GitHub REST 
 - Bar chart of stars per tracked repo
 - Light and dark theme
 
+## Layout
+
+npm workspaces, with the app and two shared packages:
+
+```
+apps/web         the dashboard
+packages/ui      EmptyState, RepoStat, ResponsiveTooltip, the MUI theme
+packages/plots   the bar chart
+```
+
+The packages are internal and consumed as TypeScript source, so there is no build step for them. Vite compiles them with the app. They also can't import anything from `apps/`, and ESLint fails if they try.
+
 ## Running it
 
 ```bash
@@ -26,9 +38,9 @@ npm install
 npm run dev
 ```
 
-Other scripts: `npm test`, `npm run lint`, `npm run build`.
+Run everything from the root: `npm test`, `npm run lint`, `npm run typecheck`, `npm run build`. The build ends up in `apps/web/dist`.
 
-You can add a GitHub token in `.env` to get a higher rate limit while developing. The app works without one.
+You can add a GitHub token in `apps/web/.env` to get a higher rate limit while developing. The app works without one.
 
 ```
 VITE_GITHUB_TOKEN=your_token
@@ -37,6 +49,7 @@ VITE_GITHUB_TOKEN=your_token
 ## Decisions
 
 - **bullet-proof-react folder structure.** Each feature keeps its own api, components, store and types. Only shared things go in `src/components` and `src/utils`.
+- **npm workspaces.** This is my first monorepo, so I kept it to what npm already gives you and added no extra tooling. The packages are consumed as source, and they keep React and MUI as peer dependencies so the bundle only ever has one copy of them.
 - **Features don't import each other.** Search results render their Track button through a `renderRepoActions` prop, and `app.tsx` passes it in.
 - **Redux Toolkit instead of Zustand.** I've used RTK before, and RTK Query comes with it, so caching, invalidation and loading states are handled. With Zustand I would have added TanStack Query next to it, since Zustand only covers client state. Redux DevTools also helps a lot while debugging.
 - **User choices go in a slice, server data goes in RTK Query.** The slice keeps which repos are tracked, because that's a user choice that must survive a reload. Stars, issues and commits come from the cache, because they belong to the server and go stale right away. Search text, page and the active tab stay in component state.
