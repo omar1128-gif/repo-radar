@@ -6,9 +6,9 @@ import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { RepoStat } from '@repo-radar/ui';
 import dayjs from 'dayjs';
 
-import { RepoStat } from '@/components/repo-stat';
 import type { GitHubRepo } from '@/types';
 import { formatCompactNumber, formatNumber } from '@/utils/format-number';
 

@@ -15,11 +15,11 @@ import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import { RepoStat } from '@repo-radar/ui';
 import dayjs from 'dayjs';
 
 import { getErrorMessage } from '@/api/get-error-message';
 import { useAppDispatch } from '@/app/hooks';
-import { RepoStat } from '@/components/repo-stat';
 import { formatCompactNumber, formatNumber } from '@/utils/format-number';
 
 import { useGetRepoStatsQuery } from '../api/get-repo-stats';

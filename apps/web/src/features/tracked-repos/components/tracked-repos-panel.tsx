@@ -5,10 +5,10 @@ import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { EmptyState } from '@repo-radar/ui';
 import { Fragment } from 'react';
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { EmptyState } from '@/components/empty-state';
 
 import { trackedReposApi } from '../api/get-repo-stats';
 import { selectTrackedReposList } from '../stores';

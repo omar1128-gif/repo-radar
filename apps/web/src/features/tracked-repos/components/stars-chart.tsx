@@ -1,10 +1,10 @@
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { BarChart } from '@repo-radar/plots';
 import { shallowEqual } from 'react-redux';
 
 import { useAppSelector } from '@/app/hooks';
-import { BarChart } from '@/components/charts/bar-chart';
 import { formatCompactNumber, formatNumber } from '@/utils/format-number';
 
 import { trackedReposApi } from '../api/get-repo-stats';

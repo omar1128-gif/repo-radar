@@ -9,10 +9,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { SerializedError } from '@reduxjs/toolkit';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { EmptyState } from '@repo-radar/ui';
 import { Fragment } from 'react';
 
 import { getErrorMessage } from '@/api/get-error-message';
-import { EmptyState } from '@/components/empty-state';
 import { APP_CONFIG } from '@/config/app.config';
 import type { GitHubRepo, GitHubSearchResponse } from '@/types';
 

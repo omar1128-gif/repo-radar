@@ -2,7 +2,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { ReactNode } from 'react';
 
-import { ResponsiveTooltip } from './ui/responsive-tooltip';
+import { ResponsiveTooltip } from './responsive-tooltip';
 
 interface RepoStatProps {
   icon: ReactNode;

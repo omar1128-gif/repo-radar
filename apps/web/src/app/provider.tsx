@@ -1,10 +1,10 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
+import { theme } from '@repo-radar/ui';
 import type { ReactNode } from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
 
 import { store } from './store';
-import { theme } from './theme';
 
 export function AppProvider({ children }: { children: ReactNode }) {
   return (
