@@ -1,10 +1,10 @@
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { BarChart } from '@mui/x-charts/BarChart';
 import { shallowEqual } from 'react-redux';
 
 import { useAppSelector } from '@/app/hooks';
+import { BarChart } from '@/components/charts/bar-chart';
 import { formatCompactNumber, formatNumber } from '@/utils/format-number';
 
 import { trackedReposApi } from '../api/get-repo-stats';
@@ -12,11 +12,6 @@ import { selectTrackedReposList } from '../stores';
 
 const BAR_HEIGHT = 36;
 const CHART_PADDING = 64;
-
-interface StarsChartEntry {
-  fullName: string;
-  stars: number;
-}
 
 export function StarsChart() {
   const trackedRepos = useAppSelector(selectTrackedReposList);
@@ -32,13 +27,17 @@ export function StarsChart() {
     shallowEqual
   );
 
-  const entries = trackedRepos
+  const chartData = trackedRepos
     .map((trackedRepo, index) => ({
-      fullName: trackedRepo.full_name,
-      stars: stars[index],
+      label: trackedRepo.full_name,
+      value: stars[index],
     }))
-    .filter((entry): entry is StarsChartEntry => entry.stars !== null)
-    .sort((a, b) => b.stars - a.stars);
+    .filter(
+      (entry): entry is { label: string; value: number } => entry.value !== null
+    )
+    .sort((a, b) => b.value - a.value);
+
+  const calculatedHeight = chartData.length * BAR_HEIGHT + CHART_PADDING;
 
   return (
     <Paper sx={{ p: 2 }}>
@@ -47,35 +46,17 @@ export function StarsChart() {
           Stars per repository
         </Typography>
 
-        {entries.length === 0 ? (
+        {chartData.length === 0 ? (
           <Typography variant="body2" color="text.secondary">
             Waiting for repository stats.
           </Typography>
         ) : (
           <BarChart
-            layout="horizontal"
-            height={entries.length * BAR_HEIGHT + CHART_PADDING}
-            hideLegend
-            grid={{ vertical: true }}
-            series={[
-              {
-                data: entries.map((entry) => entry.stars),
-                label: 'Stars',
-                valueFormatter: (value) => formatNumber(value ?? 0),
-              },
-            ]}
-            yAxis={[
-              {
-                scaleType: 'band',
-                data: entries.map((entry) => entry.fullName),
-                width: 'auto',
-              },
-            ]}
-            xAxis={[
-              {
-                valueFormatter: (value: number) => formatCompactNumber(value),
-              },
-            ]}
+            data={chartData}
+            height={calculatedHeight}
+            seriesLabel="Stars"
+            xValueFormatter={(val) => formatCompactNumber(val)}
+            yValueFormatter={(val) => formatNumber(val)}
           />
         )}
       </Stack>
